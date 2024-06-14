@@ -14,7 +14,6 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
-import retrofit2.Response
 
 class BarcodeAnalyser(private val context: Context,
                       private val viewModel: ResultViewModel
