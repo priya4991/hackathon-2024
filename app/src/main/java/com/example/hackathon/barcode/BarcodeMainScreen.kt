@@ -15,13 +15,13 @@ import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun BarcodeMainScreen() {
+fun BarcodeMainScreen(viewModel: ResultViewModel) {
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val analyserType by remember { mutableStateOf(AnalyserType.BARCODE) }
 
     if (cameraPermissionState.status.isGranted) {
-        CameraScreen(analyserType)
+        CameraScreen(analyserType, viewModel)
     } else if (cameraPermissionState.status.shouldShowRationale) {
         Text("Camera Permission permanently denied")
     } else {
