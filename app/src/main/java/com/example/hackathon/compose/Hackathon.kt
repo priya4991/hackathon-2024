@@ -27,6 +27,7 @@ fun Hackathon(sku: Sku) {
             Column(verticalArrangement = Arrangement.Center) {
                 CameraHeader()
                 BarcodeMainScreen()
+//                Prompt(sku)
             }
 
         }

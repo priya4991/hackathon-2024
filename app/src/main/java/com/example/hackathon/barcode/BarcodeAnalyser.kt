@@ -5,10 +5,14 @@ import android.content.Context
 import android.widget.Toast
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.example.hackathon.api.RetrofitHelper
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
 import com.google.mlkit.vision.common.InputImage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 
 class BarcodeAnalyser(private val context: Context) : ImageAnalysis.Analyzer {
 
@@ -29,14 +33,21 @@ class BarcodeAnalyser(private val context: Context) : ImageAnalysis.Analyzer {
                 barcode?.takeIf { it.isNotEmpty() }
                     ?.mapNotNull { it.rawValue }
                     ?.joinToString(",")
-                    ?.let { Toast.makeText(context, it, Toast.LENGTH_SHORT).show() }
+                    ?.let { getAlternatives(it) }
             }.addOnCompleteListener {
                 imageProxy.close()
             }
         }
     }
 
-    fun testToast(text: String) {
-        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+    private fun getAlternatives(text: String) {
+//        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
+        GlobalScope.launch(Dispatchers.Main) {
+            val result = RetrofitHelper.getInstance().getAlternatives();
+            if (result != null) {
+                Toast.makeText(context, result.body()?.punchline, Toast.LENGTH_SHORT).show()
+//                Prompt(sku = )
+            }
+        }
     }
 }

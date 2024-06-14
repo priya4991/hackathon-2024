@@ -8,7 +8,7 @@ object RetrofitHelper {
 
     private const val API_URL = "http://official-joke-api.appspot.com"
 
-    fun getInstance(): Retrofit {
+    fun getInstance(): AlternativesApi {
         val gson = GsonBuilder()
             .setLenient()
             .create()
@@ -17,5 +17,6 @@ object RetrofitHelper {
             .baseUrl(API_URL)
             .addConverterFactory(GsonConverterFactory.create(gson))
             .build()
+            .create(AlternativesApi::class.java)
     }
 }

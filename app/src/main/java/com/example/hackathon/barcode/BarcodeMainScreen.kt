@@ -18,7 +18,7 @@ import com.google.accompanist.permissions.shouldShowRationale
 fun BarcodeMainScreen() {
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
-    var analyserType by remember { mutableStateOf(AnalyserType.BARCODE) }
+    val analyserType by remember { mutableStateOf(AnalyserType.BARCODE) }
 
     if (cameraPermissionState.status.isGranted) {
         CameraScreen(analyserType)

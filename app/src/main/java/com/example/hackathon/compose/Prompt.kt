@@ -39,11 +39,10 @@ fun Prompt(sku: Sku) {
     val alternatives = remember { mutableStateListOf<AlternativeItem>() }
 
     if (alternatives.isEmpty()) {
-        val alternativesApi = RetrofitHelper.getInstance().create(AlternativesApi::class.java)
 
         GlobalScope.launch {
 //            val result = alternativesApi.getAlternatives(sku.skuId)
-            val result = alternativesApi.getAlternatives()
+            val result = RetrofitHelper.getInstance().getAlternatives()
             if (result?.body() != null) {
                 alternatives.add(result.body()!!)
             }
