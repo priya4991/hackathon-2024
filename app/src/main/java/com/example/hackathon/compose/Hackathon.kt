@@ -9,46 +9,44 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.zIndex
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.hackathon.R
-import com.example.hackathon.api.AlternativeItem
+import com.example.hackathon.api.ApiResponse
 import com.example.hackathon.barcode.BarcodeMainScreen
 import com.example.hackathon.barcode.ResultViewModel
-import com.example.hackathon.model.Sku
 import com.example.hackathon.ui.theme.HackathonTheme
-import java.util.UUID
 
 @SuppressLint("RememberReturnType")
 @Composable
-fun Hackathon(sku: Sku) {
+fun Hackathon() {
 
     val viewModel: ResultViewModel = viewModel(
         key = "resultViewModelKey",
         factory = ViewModelProvider.NewInstanceFactory()
     )
     val result by viewModel.result.observeAsState()
-    val alternatives = remember { mutableStateListOf<AlternativeItem>() }
+    val alternatives = remember { mutableStateOf<ApiResponse?>(null) }
     Log.i("Hackarthon", "Prompt created")
 
 
 
     result?.let { newResult ->
-        if (!alternatives.contains(newResult)) {
-            Log.i("Hackarthon", "result rendering " + result!!.punchline)
-            alternatives.add(newResult)
-        }
+//        if (!alternatives.contains(newResult)) {
+//            Log.i("Hackarthon", "result rendering " + result!!.punchline)
+//            alternatives.add(newResult)
+//        }
+        alternatives.value = newResult
     }
 
     val closeList: () -> Unit = {
         Log.i("Hackathon", "closing list")
         viewModel.clearResult()
-        alternatives.clear()
+        alternatives.value = null
     }
     Box(modifier = Modifier
         .zIndex(1f)
@@ -58,12 +56,12 @@ fun Hackathon(sku: Sku) {
             .fillMaxSize()) {
 
             Column(verticalArrangement = Arrangement.Center) {
-                if (alternatives.isEmpty()) {
+                if (alternatives.value == null) {
                     CameraHeader()
                     BarcodeMainScreen(viewModel)
                 } else {
                     ShoppingList(closeList)
-                    Prompt(sku, alternatives)
+                    Prompt(alternatives.value!!)
                 }
             }
 
@@ -90,17 +88,6 @@ fun Hackathon(sku: Sku) {
 @Composable
 fun HackathonPreview() {
     HackathonTheme {
-        Hackathon(
-            Sku(
-                UUID.randomUUID(),
-                "Dr Pepper Regular 500 M",
-                "£1.69",
-                "£0.34/100ml",
-                R.drawable.drpepper,
-                valid = "Valid for deliver until 23/06",
-                priceMatched = false,
-                clubcardOffer = arrayListOf("£5 Meal Deal Clubcard Price £5.50","Meal Deal Regular Price - Selected")
-            )
-        )
+        Hackathon()
     }
 }
