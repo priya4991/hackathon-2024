@@ -10,8 +10,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -20,39 +18,20 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.hackathon.R
-import com.example.hackathon.api.AlternativesApi
 import com.example.hackathon.api.AlternativeItem
-import com.example.hackathon.api.RetrofitHelper
 import com.example.hackathon.model.Sku
 import com.example.hackathon.tescoFontFamily
 import com.example.hackathon.ui.theme.HackathonTheme
-import kotlinx.coroutines.DelicateCoroutinesApi
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 import java.util.UUID
 
-@OptIn(DelicateCoroutinesApi::class)
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun Prompt(sku: Sku) {
+fun Prompt(sku: Sku, alternatives: List<AlternativeItem>?) {
 
-    val alternatives = remember { mutableStateListOf<AlternativeItem>() }
-
-    if (alternatives.isEmpty()) {
-        val alternativesApi = RetrofitHelper.getInstance().create(AlternativesApi::class.java)
-
-        GlobalScope.launch {
-//            val result = alternativesApi.getAlternatives(sku.skuId)
-            val result = alternativesApi.getAlternatives()
-            if (result?.body() != null) {
-                alternatives.add(result.body()!!)
-            }
-        }
-    }
-
-    Box(modifier = Modifier
-        .background(Color.White)
-        .padding(all = 10.dp)
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .padding(all = 10.dp)
     ) {
         Column(modifier = Modifier.background(Color.White)) {
 
@@ -92,15 +71,16 @@ fun Prompt(sku: Sku) {
                     }
                 }
             }
-
-            if (alternatives.isNotEmpty()) {
-                Row {
+            Row {
+                if (alternatives != null) {
                     AlternativesView(alternatives)
                 }
             }
+
         }
     }
 }
+
 
 @Preview(showBackground = true)
 @Composable
@@ -116,7 +96,8 @@ fun PromptPreview() {
                 valid = "Valid for deliver until 23/06",
                 priceMatched = false,
                 clubcardOffer = arrayListOf("£5 Meal Deal Clubcard Price £5.50","Meal Deal Regular Price - Selected")
-            )
+            ),
+            null
         )
     }
 }
