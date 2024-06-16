@@ -75,13 +75,15 @@ class BarcodeAnalyser(private val context: Context,
                     )
                     if (result.isSuccessful) {
                         result.body()?.let {
-                            Log.i("barcodeAnalyser", "Result received")
+                            Log.i("barcodeAnalyser", "Result received: " + result.body()!!.message )
                             viewModel.hideLoader()
                             viewModel.updateResult(it)
+                            viewModel.showError(false)
                         }
                     } else {
                         viewModel.hideLoader()
                         viewModel.enableScan(true)
+                        viewModel.showError(true)
                         val statusCode = result.code()
                         val errorBody = result.errorBody()?.string()
                         Log.e("GET_ERROR", "Unsuccessful response: $statusCode - $errorBody")
@@ -89,6 +91,7 @@ class BarcodeAnalyser(private val context: Context,
                 } catch (e: HttpException) {
                     viewModel.hideLoader()
                     viewModel.enableScan(true)
+                    viewModel.showError(true)
                     val statusCode = e.code()
                     val errorMessage = e.message()
                     Log.e("HTTP_EXCEPTION", "HTTP error: $statusCode - $errorMessage")
@@ -96,6 +99,7 @@ class BarcodeAnalyser(private val context: Context,
                     // Handle network exceptions or unexpected errors
                     viewModel.hideLoader()
                     viewModel.enableScan(true)
+                    viewModel.showError(true)
                     Log.e("GET_FAILURE", "Error fetching data: $e.message")
                 }
             }

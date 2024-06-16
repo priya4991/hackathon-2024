@@ -6,6 +6,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.Preview
 import androidx.camera.lifecycle.ProcessCameraProvider
 import androidx.camera.view.PreviewView
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -13,7 +14,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
+import androidx.compose.ui.zIndex
 import androidx.core.content.ContextCompat
+import com.example.hackathon.compose.ErrorMessage
 import com.example.hackathon.viewmodel.AppViewModel
 
 @Composable
@@ -23,8 +26,14 @@ fun CameraScreen(analyzerType: AnalyserType, viewModel: AppViewModel) {
     val cameraProviderFuture = remember {
         ProcessCameraProvider.getInstance(localContext)
     }
+    Box {
+
+
+    ErrorMessage(viewModel = viewModel)
     AndroidView(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize()
+            .zIndex(0f),
         factory = { context ->
             val previewView = PreviewView(context)
             val preview = Preview.Builder().build()
@@ -58,4 +67,5 @@ fun CameraScreen(analyzerType: AnalyserType, viewModel: AppViewModel) {
             previewView
         }
     )
+}
 }
