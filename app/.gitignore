@@ -33,7 +33,7 @@ gradle-app.setting
 # Covers files to be ignored for android development using Android Studio.
 
 # Built application files
-*.apk
+#*.apk
 *.ap_
 *.aab
 
