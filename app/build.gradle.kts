@@ -1,3 +1,6 @@
+import java.io.FileInputStream
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.jetbrains.kotlin.android)
@@ -18,6 +21,20 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        // Read properties from local.properties
+        val localProperties = Properties()
+        val localPropertiesFile = rootProject.file("local.properties")
+        if (localPropertiesFile.exists()) {
+            FileInputStream(localPropertiesFile).use { stream ->
+                localProperties.load(stream)
+            }
+        }
+
+        // Define BuildConfig fields
+        buildConfigField("String", "USERNAME", "\"${localProperties.getProperty("username")}\"")
+        buildConfigField("String", "PASSWORD", "\"${localProperties.getProperty("password")}\"")
+        buildConfigField("String", "APIURL", "\"${localProperties.getProperty("apiurl")}\"")
     }
 
     buildTypes {
@@ -38,6 +55,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.1"
@@ -73,6 +91,7 @@ dependencies {
     implementation(libs.androidx.runtime.livedata)
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
+    implementation("io.coil-kt:coil-compose:2.0.0")
 
 
     testImplementation(libs.junit)

@@ -2,31 +2,24 @@ package com.example.hackathon.compose
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.hackathon.R
-import com.example.hackathon.api.AlternativeItem
-import com.example.hackathon.model.Sku
-import com.example.hackathon.tescoFontFamily
+import com.example.hackathon.api.ApiResponse
+import com.example.hackathon.model.AlternativeItemSku
+import com.example.hackathon.model.ItemSku
 import com.example.hackathon.ui.theme.HackathonTheme
-import java.util.UUID
+import java.util.ArrayList
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
-fun Prompt(sku: Sku, alternatives: List<AlternativeItem>?) {
+fun Prompt(sku: ApiResponse) {
 
     Box(
         modifier = Modifier
@@ -35,45 +28,22 @@ fun Prompt(sku: Sku, alternatives: List<AlternativeItem>?) {
     ) {
         Column(modifier = Modifier.background(Color.White)) {
 
-            SkuView(sku = sku)
+            SkuView(sku = sku.item)
 
-            if (sku.clubcardOffer.isNotEmpty()) {
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    modifier = Modifier
-                        .padding(top = 10.dp, bottom = 10.dp)
-                        .fillMaxWidth()
-                ) {
-                    ClubCard(sku)
-                }
-            }
+//            if (sku.clubcardOffer.isNotEmpty()) {
+//                Row(
+//                    horizontalArrangement = Arrangement.Center,
+//                    modifier = Modifier
+//                        .padding(top = 10.dp, bottom = 10.dp)
+//                        .fillMaxWidth()
+//                ) {
+//                    ClubCard(sku)
+//                }
+//            }
 
             Row {
-                Column {
-                    Text(
-                        sku.valid,
-                        modifier = Modifier.fillMaxWidth(),
-                        color = Color.Gray,
-                        fontSize = 10.sp,
-                        textAlign = TextAlign.Right,
-                        fontFamily = tescoFontFamily,
-                        fontWeight = FontWeight.Normal
-                    )
-
-                    if (sku.priceMatched) {
-                        Text(
-                            "Aldi Price Match",
-                            fontSize = 10.sp,
-                            fontFamily = tescoFontFamily,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.Gray
-                        )
-                    }
-                }
-            }
-            Row {
-                if (alternatives != null) {
-                    AlternativesView(alternatives)
+                if (sku.related.isNotEmpty()) {
+                    AlternativesList(sku.related)
                 }
             }
 
@@ -85,19 +55,48 @@ fun Prompt(sku: Sku, alternatives: List<AlternativeItem>?) {
 @Preview(showBackground = true)
 @Composable
 fun PromptPreview() {
+    val item = ItemSku(
+        "251496258",
+        "Pepsi Max No Sugar Cola Bottle 500ml",
+        "PEPSI",
+        "00000087170702",
+        "https://digitalcontent.api.tesco.com/v2/media/ghs/46c9b712-9299-434c-9408-4d6e912935e7/dafd37ae-69b4-4589-85b3-6879a9edaad2_1516733458.jpeg?h=225&w=225",
+        "RHJpbmtzJTdDT24lMjBUaGUlMjBHbyUyMERyaW5rcyU3Q0Zpenp5JTIwJiUyMFNvZnQlMjBEcmlua3M=",
+        "Fizzy & Soft Drinks",
+        "RHJpbmtzJTdDT24lMjBUaGUlMjBHbyUyMERyaW5rcyU3Q0Zpenp5JTIwJiUyMFNvZnQlMjBEcmlua3MlN0NGaXp6eSUyMCYlMjBTb2Z0JTIwRHJpbmtz",
+        "Fizzy & Soft Drinks",
+        "1.55",
+        "0.31",
+        "100ml",
+        "AvailableForSale",
+        emptyList()
+    )
+    val altItem = AlternativeItemSku(
+        "251496258",
+        "Pepsi Max No Sugar Cola Bottle 500ml",
+        "PEPSI",
+        "00000087170702",
+        "https://digitalcontent.api.tesco.com/v2/media/ghs/46c9b712-9299-434c-9408-4d6e912935e7/dafd37ae-69b4-4589-85b3-6879a9edaad2_1516733458.jpeg?h=225&w=225",
+        "RHJpbmtzJTdDT24lMjBUaGUlMjBHbyUyMERyaW5rcyU3Q0Zpenp5JTIwJiUyMFNvZnQlMjBEcmlua3M=",
+        "Fizzy & Soft Drinks",
+        "RHJpbmtzJTdDT24lMjBUaGUlMjBHbyUyMERyaW5rcyU3Q0Zpenp5JTIwJiUyMFNvZnQlMjBEcmlua3MlN0NGaXp6eSUyMCYlMjBTb2Z0JTIwRHJpbmtz",
+        "Fizzy & Soft Drinks",
+        "1.55",
+        "0.31",
+        "100ml",
+        "AvailableForSale",
+        emptyList(),
+        0.997761785984039
+    )
+    val altItemList = ArrayList<AlternativeItemSku>()
+    altItemList.add(altItem)
     HackathonTheme {
         Prompt(
-            Sku(
-                UUID.randomUUID(),
-                "Dr Pepper Regular 500 M",
-                "£1.69",
-                "£0.34/100ml",
-                R.drawable.drpepper,
-                valid = "Valid for deliver until 23/06",
-                priceMatched = false,
-                clubcardOffer = arrayListOf("£5 Meal Deal Clubcard Price £5.50","Meal Deal Regular Price - Selected")
-            ),
-            null
+            ApiResponse(
+                item,
+                altItemList
+
+            )
         )
     }
 }

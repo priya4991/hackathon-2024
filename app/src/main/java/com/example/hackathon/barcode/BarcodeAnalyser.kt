@@ -2,9 +2,11 @@ package com.example.hackathon.barcode
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.util.Base64
 import android.util.Log
 import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
+import com.example.hackathon.BuildConfig
 import com.example.hackathon.api.RetrofitHelper
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
@@ -14,6 +16,7 @@ import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
+import retrofit2.HttpException
 
 class BarcodeAnalyser(private val context: Context,
                       private val viewModel: ResultViewModel
@@ -46,13 +49,37 @@ class BarcodeAnalyser(private val context: Context,
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun getAlternatives(text: String) {
-//        Toast.makeText(context, text, Toast.LENGTH_SHORT).show()
         if (!isFirstScanCompleted) {
             GlobalScope.launch(Dispatchers.Main) {
-                val result = RetrofitHelper.getInstance().getAlternatives();
-                result?.body()?.let {
-                    Log.i("barcodeAnalyser", "Result received")
-                    viewModel.updateResult(it)  // Update the ViewModel
+                val username = BuildConfig.USERNAME
+                val password = BuildConfig.PASSWORD
+                val auth = "$username:$password"
+                val encodedAuth = Base64.encodeToString(auth.toByteArray(), Base64.NO_WRAP)
+                val authHeader = "Basic $encodedAuth"
+                Log.i("barcodeAnalyser", "sending request")
+                try {
+                    val result = RetrofitHelper.getInstance().getResponse(
+                        authHeader,
+                        text.padStart(14, '0'),
+                        "0"
+                    )
+                    if (result.isSuccessful) {
+                        result.body()?.let {
+                            Log.i("barcodeAnalyser", "Result received")
+                            viewModel.updateResult(it)
+                        }
+                    } else {
+                        val statusCode = result.code()
+                        val errorBody = result.errorBody()?.string()
+                        Log.e("GET_ERROR", "Unsuccessful response: $statusCode - $errorBody")
+                    }
+                } catch (e: HttpException) {
+                    val statusCode = e.code()
+                    val errorMessage = e.message()
+                    Log.e("HTTP_EXCEPTION", "HTTP error: $statusCode - $errorMessage")
+                } catch (e: Throwable) {
+                    // Handle network exceptions or unexpected errors
+                    Log.e("GET_FAILURE", "Error fetching data", e)
                 }
             }
         }
