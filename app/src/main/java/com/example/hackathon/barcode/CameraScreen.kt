@@ -14,9 +14,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
+import com.example.hackathon.viewmodel.AppViewModel
 
 @Composable
-fun CameraScreen(analyzerType: AnalyserType, viewModel: ResultViewModel) {
+fun CameraScreen(analyzerType: AnalyserType, viewModel: AppViewModel) {
     val localContext = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     val cameraProviderFuture = remember {
