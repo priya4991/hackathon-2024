@@ -28,10 +28,13 @@ class BarcodeAnalyser(private val context: Context,
         .build()
 
     private val scanner = BarcodeScanning.getClient(options)
-    private var isFirstScanCompleted = false
 
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
+        if (!viewModel.isScanEnabled.value) {
+            imageProxy.close()
+            return
+        }
         imageProxy.image?.let { image ->
             scanner.process(
                 InputImage.fromMediaImage(
@@ -41,16 +44,21 @@ class BarcodeAnalyser(private val context: Context,
                 barcode?.takeIf { it.isNotEmpty() }
                     ?.mapNotNull { it.rawValue }
                     ?.joinToString(",")
-                    ?.let { getAlternatives(it) }
+                    ?.let { value ->
+                        viewModel.enableScan(false)
+                        getAlternatives(value) }
             }.addOnCompleteListener {
+                Log.i("barcodeAnalyser", "camera closed")
                 imageProxy.close()
+            }.addOnFailureListener {
+                Log.e("barcodeAnalyser", "camera error in processing")
+                viewModel.enableScan(true)
             }
         }
     }
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun getAlternatives(text: String) {
-        if (!isFirstScanCompleted) {
             GlobalScope.launch(Dispatchers.Main) {
                 val username = BuildConfig.USERNAME
                 val password = BuildConfig.PASSWORD
@@ -73,21 +81,23 @@ class BarcodeAnalyser(private val context: Context,
                         }
                     } else {
                         viewModel.hideLoader()
+                        viewModel.enableScan(true)
                         val statusCode = result.code()
                         val errorBody = result.errorBody()?.string()
                         Log.e("GET_ERROR", "Unsuccessful response: $statusCode - $errorBody")
                     }
                 } catch (e: HttpException) {
                     viewModel.hideLoader()
+                    viewModel.enableScan(true)
                     val statusCode = e.code()
                     val errorMessage = e.message()
                     Log.e("HTTP_EXCEPTION", "HTTP error: $statusCode - $errorMessage")
                 } catch (e: Throwable) {
                     // Handle network exceptions or unexpected errors
                     viewModel.hideLoader()
-                    Log.e("GET_FAILURE", "Error fetching data", e)
+                    viewModel.enableScan(true)
+                    Log.e("GET_FAILURE", "Error fetching data: $e.message")
                 }
             }
-        }
     }
 }

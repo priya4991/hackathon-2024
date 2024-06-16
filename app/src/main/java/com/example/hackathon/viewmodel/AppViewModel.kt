@@ -11,17 +11,24 @@ import com.example.hackathon.api.ApiResponse
 class AppViewModel : ViewModel() {
     private val _result = MutableLiveData<ApiResponse>()
     private val _isLoading = mutableStateOf(false)
+    private val _isScanEnabled = mutableStateOf(true)
 
     val result: LiveData<ApiResponse> get() = _result
     val isLoading: State<Boolean> get() = _isLoading
+    val isScanEnabled: State<Boolean> get() = _isScanEnabled
 
     fun updateResult(result: ApiResponse) {
         Log.i("ResultViewModel", "Result updated")
         _result.value = result
     }
 
+    fun enableScan(flag: Boolean) {
+        _isScanEnabled.value = flag
+    }
+
     fun clearResult() {
         _result.value = null
+        enableScan(true)
     }
 
     fun showLoader() {
