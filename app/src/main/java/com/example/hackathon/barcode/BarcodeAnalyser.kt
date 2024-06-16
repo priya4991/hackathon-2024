@@ -8,6 +8,7 @@ import androidx.camera.core.ImageAnalysis
 import androidx.camera.core.ImageProxy
 import com.example.hackathon.BuildConfig
 import com.example.hackathon.api.RetrofitHelper
+import com.example.hackathon.viewmodel.AppViewModel
 import com.google.mlkit.vision.barcode.BarcodeScannerOptions
 import com.google.mlkit.vision.barcode.BarcodeScanning
 import com.google.mlkit.vision.barcode.common.Barcode
@@ -19,7 +20,7 @@ import kotlinx.coroutines.launch
 import retrofit2.HttpException
 
 class BarcodeAnalyser(private val context: Context,
-                      private val viewModel: ResultViewModel
+                      private val viewModel: AppViewModel
 ) : ImageAnalysis.Analyzer {
 
     private val options = BarcodeScannerOptions.Builder()
@@ -57,6 +58,7 @@ class BarcodeAnalyser(private val context: Context,
                 val encodedAuth = Base64.encodeToString(auth.toByteArray(), Base64.NO_WRAP)
                 val authHeader = "Basic $encodedAuth"
                 Log.i("barcodeAnalyser", "sending request")
+                viewModel.showLoader()
                 try {
                     val result = RetrofitHelper.getInstance().getResponse(
                         authHeader,
@@ -66,19 +68,23 @@ class BarcodeAnalyser(private val context: Context,
                     if (result.isSuccessful) {
                         result.body()?.let {
                             Log.i("barcodeAnalyser", "Result received")
+                            viewModel.hideLoader()
                             viewModel.updateResult(it)
                         }
                     } else {
+                        viewModel.hideLoader()
                         val statusCode = result.code()
                         val errorBody = result.errorBody()?.string()
                         Log.e("GET_ERROR", "Unsuccessful response: $statusCode - $errorBody")
                     }
                 } catch (e: HttpException) {
+                    viewModel.hideLoader()
                     val statusCode = e.code()
                     val errorMessage = e.message()
                     Log.e("HTTP_EXCEPTION", "HTTP error: $statusCode - $errorMessage")
                 } catch (e: Throwable) {
                     // Handle network exceptions or unexpected errors
+                    viewModel.hideLoader()
                     Log.e("GET_FAILURE", "Error fetching data", e)
                 }
             }

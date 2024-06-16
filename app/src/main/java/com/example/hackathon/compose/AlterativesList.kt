@@ -19,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
@@ -67,14 +68,16 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
                 modifier = Modifier.padding(start = 5.dp),
             )
         }
-        if (showAlternatives) {
+//        if (showAlternatives) {
 
-            Column(modifier = Modifier.padding(all = 5.dp)) {
+            Column(modifier = Modifier
+                .padding(all = 5.dp)
+                .alpha(if (showAlternatives) 1f else 0f)) {
                 for (alternative in alternatives) {
                     SkuView(sku = alternative)
                 }
             }
-        }
+//        }
     }
 
 }

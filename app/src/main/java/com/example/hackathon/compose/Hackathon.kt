@@ -18,14 +18,14 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.hackathon.api.ApiResponse
 import com.example.hackathon.barcode.BarcodeMainScreen
-import com.example.hackathon.barcode.ResultViewModel
+import com.example.hackathon.viewmodel.AppViewModel
 import com.example.hackathon.ui.theme.HackathonTheme
 
 @SuppressLint("RememberReturnType")
 @Composable
 fun Hackathon() {
 
-    val viewModel: ResultViewModel = viewModel(
+    val viewModel: AppViewModel = viewModel(
         key = "resultViewModelKey",
         factory = ViewModelProvider.NewInstanceFactory()
     )

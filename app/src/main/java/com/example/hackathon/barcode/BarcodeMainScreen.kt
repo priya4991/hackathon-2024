@@ -7,6 +7,8 @@ import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import com.example.hackathon.compose.LoadingScreen
+import com.example.hackathon.viewmodel.AppViewModel
 import com.google.accompanist.permissions.ExperimentalPermissionsApi
 import com.google.accompanist.permissions.isGranted
 import com.google.accompanist.permissions.rememberPermissionState
@@ -14,13 +16,18 @@ import com.google.accompanist.permissions.shouldShowRationale
 
 @OptIn(ExperimentalPermissionsApi::class)
 @Composable
-fun BarcodeMainScreen(viewModel: ResultViewModel) {
+fun BarcodeMainScreen(viewModel: AppViewModel) {
 
     val cameraPermissionState = rememberPermissionState(Manifest.permission.CAMERA)
     val analyserType by remember { mutableStateOf(AnalyserType.BARCODE) }
+    val loader = viewModel.isLoading.value
 
     if (cameraPermissionState.status.isGranted) {
-        CameraScreen(analyserType, viewModel)
+        if (loader) {
+            LoadingScreen()
+        } else {
+            CameraScreen(analyserType, viewModel)
+        }
     } else if (cameraPermissionState.status.shouldShowRationale) {
         Text("Camera Permission permanently denied")
     } else {
