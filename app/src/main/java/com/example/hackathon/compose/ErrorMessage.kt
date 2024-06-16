@@ -38,7 +38,7 @@ fun ErrorMessage(viewModel: AppViewModel?) {
                 },
 //                containerColor = colorResource(id = R.color.tesco_red).copy(alpha = 0.25f)
             ) {
-                Text("Error. Try again with a different item.",
+                Text("Error. Can't scan this item. Please try a different item.",
                     fontFamily = tescoFontFamily)
             }
         }
