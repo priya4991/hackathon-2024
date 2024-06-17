@@ -1,15 +1,25 @@
 package com.example.hackathon.compose
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Icon
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -23,17 +33,24 @@ import coil.compose.AsyncImage
 import com.example.hackathon.R
 import com.example.hackathon.model.ItemSku
 import com.example.hackathon.tescoFontFamily
-import com.example.hackathon.ui.theme.HackathonTheme
 
 @Composable
 fun SkuView(sku: ItemSku) {
+    val itemAmt = remember { mutableStateOf(sku.amount) }
+
+   val increaseAmount: () -> Unit = {
+       itemAmt.value++
+    }
+    val decreaseAmt: () -> Unit = {
+        itemAmt.value--
+    }
     Column {
 
 
     Row(verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
             model = sku.defaultimageurl,
-            contentDescription = ""
+            contentDescription = "Item image url"
         )
         Column(modifier = Modifier.padding(all = 10.dp)) {
 
@@ -84,10 +101,11 @@ fun SkuView(sku: ItemSku) {
                 }
 
                 Spacer(modifier = Modifier.weight(1.0f))
+                if (itemAmt.value == 0) {
 
                 Button(
                     colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.tesco_blue)),
-                    onClick = { },
+                    onClick = increaseAmount,
                     modifier = Modifier.size(110.dp, 40.dp)
                 ) {
                     Text(
@@ -96,6 +114,51 @@ fun SkuView(sku: ItemSku) {
                         fontFamily = tescoFontFamily,
                         fontWeight = FontWeight.Bold
                     )
+                }
+            } else {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    OutlinedButton(
+                        onClick = decreaseAmt,
+                        modifier= Modifier.size(35.dp),
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(0.dp),
+                        border = BorderStroke(1.dp, colorResource(id = R.color.tesco_blue))
+                    ) {
+                        Text(
+                            "-",
+                            fontWeight = FontWeight.Bold,
+                            color = colorResource(id = R.color.tesco_blue),
+                            fontSize = 30.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.offset(y = (-5).dp)
+
+                        )
+                    }
+
+                    Text(itemAmt.value.toString(),
+                        color = Color.Black,
+                        fontSize = 15.sp,
+                        modifier = Modifier.padding(
+                            start = 13.dp,
+                            end = 13.dp
+                        ))
+
+                    Button(
+                        colors = ButtonDefaults.buttonColors(containerColor = colorResource(id = R.color.tesco_blue)),
+                        onClick = increaseAmount,
+                        modifier= Modifier.size(35.dp),
+                        shape = CircleShape,
+                        contentPadding = PaddingValues(0.dp)
+
+                    ) {
+                        Icon(imageVector = Icons.Default.Add,
+
+                            contentDescription = "Remove item from basket")
+                    }
+                }
+
                 }
             }
         }
@@ -108,7 +171,6 @@ fun SkuView(sku: ItemSku) {
 @Preview(showBackground = true)
 @Composable
 fun SkuViewPreview() {
-    HackathonTheme {
         SkuView(
             ItemSku(
                 "251496258",
@@ -124,8 +186,8 @@ fun SkuViewPreview() {
         "0.31",
         "100ml",
       "AvailableForSale",
-                emptyList()
+                emptyList(),
+                1
             )
         )
-    }
 }

@@ -14,5 +14,6 @@ open class ItemSku(
     var unitprice: String?,
     var unitofmeasure: String?,
     var status: String?,
-    var promotions: List<Promotion>?
+    var promotions: List<Promotion>?,
+    var amount: Int = 0
 )
