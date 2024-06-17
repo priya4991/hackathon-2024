@@ -41,7 +41,7 @@ fun ClubCard(promo: Promotion) {
                 .background(colorResource(R.color.tesco_blue))
             ) {
                 Column(
-                    modifier = Modifier.size(65.dp, 60.dp),
+                    modifier = Modifier.size(70.dp, 65.dp),
                     horizontalAlignment = Alignment.CenterHorizontally,
                     verticalArrangement = Arrangement.Center
                 ) {
@@ -50,7 +50,7 @@ fun ClubCard(promo: Promotion) {
                         horizontalArrangement = Arrangement.SpaceAround
                     ) {
                         promo.attributes?.let {
-                            var att = "";
+                            var att = ""
                             when(promo.attributes) {
                                 "CLUBCARD_PRICING" -> att = "Clubcard Price"
                                 "REDUCED_SECTION" -> att = "Reduced Section"
@@ -75,7 +75,7 @@ fun ClubCard(promo: Promotion) {
                 .clip(RoundedCornerShape(topEnd = 10.dp))
                 .clip(RoundedCornerShape(bottomEnd = 10.dp))
                 .background(colorResource(R.color.tesco_orange))
-                .height(60.dp)
+                .height(65.dp)
                 .fillMaxWidth()
         ) {
             Column(

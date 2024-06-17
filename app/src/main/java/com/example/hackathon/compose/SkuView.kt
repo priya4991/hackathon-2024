@@ -92,6 +92,7 @@ fun SkuView(sku: ItemSku) {
                 ) {
                     Text(
                         "Add",
+                        color = Color.White,
                         fontFamily = tescoFontFamily,
                         fontWeight = FontWeight.Bold
                     )

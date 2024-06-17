@@ -1,5 +1,11 @@
 package com.example.hackathon.compose
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,7 +21,9 @@ import androidx.compose.material3.LocalMinimumInteractiveComponentEnforcement
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -30,6 +38,7 @@ import androidx.compose.ui.unit.sp
 import com.example.hackathon.R
 import com.example.hackathon.model.AlternativeItemSku
 import com.example.hackathon.tescoFontFamily
+import kotlinx.coroutines.delay
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -44,7 +53,10 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
         ) {
             if (showAlternatives) {
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    IconButton(onClick = { showAlternatives = false }, modifier = Modifier.size(24.dp)) {
+                    IconButton(
+                        onClick = { showAlternatives = false },
+                        modifier = Modifier.size(24.dp)
+                    ) {
                         Icon(
                             painterResource(R.drawable.baseline_arrow_circle_up_24),
                             contentDescription = "Click to expand list"
@@ -53,7 +65,10 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
                 }
             } else {
                 CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    IconButton(onClick = { showAlternatives = true }, modifier = Modifier.size(24.dp)) {
+                    IconButton(
+                        onClick = { showAlternatives = true },
+                        modifier = Modifier.size(24.dp)
+                    ) {
                         Icon(
                             painterResource(R.drawable.baseline_arrow_circle_down_24),
                             contentDescription = ""
@@ -73,13 +88,39 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
         }
 //        if (showAlternatives) {
 
-            Column(modifier = Modifier
+        Column(
+            modifier = Modifier
                 .padding(all = 5.dp)
-                .alpha(if (showAlternatives) 1f else 0f)) {
-                for (alternative in alternatives) {
-                    SkuView(sku = alternative)
+                .alpha(if (showAlternatives) 1f else 0f)
+        ) {
+            val visibleItems = remember { mutableStateOf(emptyList<AlternativeItemSku>()) }
+
+            // LaunchedEffect to handle the appearance of each item with delay
+            LaunchedEffect(alternatives) {
+                // Only reset and animate if the alternatives have changed
+                if (alternatives != visibleItems.value) {
+                    visibleItems.value = emptyList()
+                    alternatives.forEachIndexed { _, alternative ->
+                        delay(100) // shorter delay to reduce compounded delay effect
+                        visibleItems.value += alternative
+                    }
                 }
             }
+
+            for (alternative in visibleItems.value) {
+                key(alternative) {
+                    AnimatedVisibility(
+                        visible = showAlternatives,
+                        enter = fadeIn(animationSpec = tween(700)) + slideInVertically(
+                            initialOffsetY = { -it / 2 }), // Adjust offset for smoother effect
+                        exit = fadeOut(animationSpec = tween(700)) + slideOutVertically(
+                            targetOffsetY = { -it / 2 }) // Adjust offset for smoother effect
+                    ) {
+                        SkuView(sku = alternative)
+                    }
+                }
+            }
+        }
 //        }
     }
 
