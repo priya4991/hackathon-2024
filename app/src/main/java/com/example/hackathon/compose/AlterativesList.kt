@@ -3,7 +3,9 @@ package com.example.hackathon.compose
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -34,6 +36,7 @@ import com.example.hackathon.tescoFontFamily
 fun AlternativesList(alternatives: List<AlternativeItemSku>) {
     var showAlternatives by remember { mutableStateOf(false) }
     Column {
+        Spacer(modifier = Modifier.height(15.dp))
         Row(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Start,
@@ -44,7 +47,7 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
                     IconButton(onClick = { showAlternatives = false }, modifier = Modifier.size(24.dp)) {
                         Icon(
                             painterResource(R.drawable.baseline_arrow_circle_up_24),
-                            contentDescription = ""
+                            contentDescription = "Click to expand list"
                         )
                     }
                 }
@@ -81,20 +84,3 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
     }
 
 }
-
-//@Preview(showBackground = true)
-//@Composable
-//fun AlternativesListPreview() {
-//    HackathonTheme {
-//        AlternativesList(
-//            alternatives = arrayListOf(
-//                AlternativeItem(
-//                    "Dr Pepper Zero 330 M",
-//                    "The setup",
-//                    "The punchline",
-//                    1
-//                )
-//            )
-//        )
-//    }
-//}

@@ -17,7 +17,8 @@ import androidx.compose.ui.unit.dp
 fun LoadingScreen() {
     Box(
         contentAlignment = Alignment.Center,
-        modifier = Modifier.fillMaxSize().background(Color.White)
+        modifier = Modifier.fillMaxSize().
+        background(Color.Transparent)
     ) {
         CircularProgressIndicator(
             color = Color.LightGray,

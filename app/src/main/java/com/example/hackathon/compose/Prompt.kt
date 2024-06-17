@@ -93,6 +93,7 @@ fun PromptPreview() {
     HackathonTheme {
         Prompt(
             ApiResponse(
+                "",
                 item,
                 altItemList
 

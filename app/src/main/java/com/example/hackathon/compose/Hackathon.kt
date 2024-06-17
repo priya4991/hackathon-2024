@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
@@ -50,7 +51,8 @@ fun Hackathon() {
     }
     Box(modifier = Modifier
         .zIndex(1f)
-        .fillMaxSize()) {
+        .fillMaxSize()
+        .statusBarsPadding()) {
         Box(modifier = Modifier
             .zIndex(1f)
             .fillMaxSize()) {
