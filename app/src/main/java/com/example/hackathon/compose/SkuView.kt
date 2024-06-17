@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -32,7 +33,6 @@ import coil.compose.AsyncImage
 import com.example.hackathon.R
 import com.example.hackathon.model.ItemSku
 import com.example.hackathon.tescoFontFamily
-import com.example.hackathon.ui.theme.HackathonTheme
 
 @Composable
 fun SkuView(sku: ItemSku) {
@@ -50,7 +50,7 @@ fun SkuView(sku: ItemSku) {
     Row(verticalAlignment = Alignment.CenterVertically) {
         AsyncImage(
             model = sku.defaultimageurl,
-            contentDescription = ""
+            contentDescription = "Item image url"
         )
         Column(modifier = Modifier.padding(all = 10.dp)) {
 
@@ -130,21 +130,12 @@ fun SkuView(sku: ItemSku) {
                             "-",
                             fontWeight = FontWeight.Bold,
                             color = colorResource(id = R.color.tesco_blue),
-                            fontSize = 20.sp
+                            fontSize = 30.sp,
+                            textAlign = TextAlign.Center,
+                            modifier = Modifier.offset(y = (-4).dp)
+
                         )
                     }
-
-//                    OutlinedButton(
-//                        onClick = decreaseAmt,
-//                        modifier= Modifier.size(35.dp),
-//                        shape = CircleShape,
-//                        contentPadding = PaddingValues(0.dp)
-//
-//                    ) {
-//                        Icon(imageVector = Icons.Default.Add,
-//
-//                            contentDescription = "Remove item from basket")
-//                    }
 
                     Text(itemAmt.value.toString(),
                         color = Color.Black,
@@ -180,7 +171,6 @@ fun SkuView(sku: ItemSku) {
 @Preview(showBackground = true)
 @Composable
 fun SkuViewPreview() {
-    HackathonTheme {
         SkuView(
             ItemSku(
                 "251496258",
@@ -200,5 +190,4 @@ fun SkuViewPreview() {
                 1
             )
         )
-    }
 }
