@@ -48,10 +48,10 @@ fun SkuView(sku: ItemSku) {
 
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-//        AsyncImage(
-//            model = sku.defaultimageurl,
-//            contentDescription = "Item image url"
-//        )
+        AsyncImage(
+            model = sku.defaultimageurl,
+            contentDescription = "Item image url"
+        )
         Column(modifier = Modifier.padding(all = 10.dp)) {
 
             Row(modifier = Modifier.padding(bottom = 5.dp)) {
