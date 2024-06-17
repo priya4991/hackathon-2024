@@ -46,48 +46,35 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
     var showAlternatives by remember { mutableStateOf(false) }
     Column {
         Spacer(modifier = Modifier.height(15.dp))
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Start,
-            modifier = Modifier.fillMaxWidth()
-        ) {
-            if (showAlternatives) {
-                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    IconButton(
-                        onClick = { showAlternatives = false },
+        CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
+            IconButton(
+                onClick = { showAlternatives = !showAlternatives },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(5.dp)
+            ) {
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth()
+                ) {
+                    Icon(
+                        painter = if (showAlternatives) painterResource(R.drawable.baseline_arrow_circle_up_24)
+                        else painterResource(R.drawable.baseline_arrow_circle_down_24),
+                        contentDescription = "Click to toggle list",
                         modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.baseline_arrow_circle_up_24),
-                            contentDescription = "Click to expand list"
-                        )
-                    }
-                }
-            } else {
-                CompositionLocalProvider(LocalMinimumInteractiveComponentEnforcement provides false) {
-                    IconButton(
-                        onClick = { showAlternatives = true },
-                        modifier = Modifier.size(24.dp)
-                    ) {
-                        Icon(
-                            painterResource(R.drawable.baseline_arrow_circle_down_24),
-                            contentDescription = ""
-                        )
-                    }
+                    )
+                    Text(
+                        "Ways to save",
+                        color = Color.Black,
+                        fontSize = 18.sp,
+                        fontFamily = tescoFontFamily,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.padding(start = 5.dp),
+                    )
                 }
             }
-
-            Text(
-                "Ways to save",
-                color = Color.Gray,
-                fontSize = 18.sp,
-                fontFamily = tescoFontFamily,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.padding(start = 5.dp),
-            )
         }
-//        if (showAlternatives) {
-
         Column(
             modifier = Modifier
                 .padding(all = 5.dp)
@@ -121,7 +108,5 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
                 }
             }
         }
-//        }
     }
-
 }
