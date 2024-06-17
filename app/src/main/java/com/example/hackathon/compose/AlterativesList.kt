@@ -75,38 +75,44 @@ fun AlternativesList(alternatives: List<AlternativeItemSku>) {
                 }
             }
         }
+//        if (showAlternatives) {
+
         Column(
             modifier = Modifier
-                .padding(all = 5.dp)
-                .alpha(if (showAlternatives) 1f else 0f)
-        ) {
-            val visibleItems = remember { mutableStateOf(emptyList<AlternativeItemSku>()) }
+//                .padding(all = 5.dp)
+                .alpha(if (showAlternatives) 1f else 0f)) {
 
-            // LaunchedEffect to handle the appearance of each item with delay
-            LaunchedEffect(alternatives) {
-                // Only reset and animate if the alternatives have changed
-                if (alternatives != visibleItems.value) {
-                    visibleItems.value = emptyList()
-                    alternatives.forEachIndexed { _, alternative ->
-                        delay(100) // shorter delay to reduce compounded delay effect
-                        visibleItems.value += alternative
+                val sortedItems = alternatives.sortedWith(compareByDescending<AlternativeItemSku> {
+                    it.promotions?.any { promo -> promo.attributes == "reduced" } ?: false }
+                    .thenBy { it.price?.toDoubleOrNull() ?: Double.MAX_VALUE })
+
+                val visibleItems = remember { mutableStateOf(emptyList<AlternativeItemSku>()) }
+
+                // LaunchedEffect to handle the appearance of each item with delay
+                LaunchedEffect(sortedItems) {
+                    // Only reset and animate if the alternatives have changed
+                    if (sortedItems != visibleItems.value) {
+                        visibleItems.value = emptyList()
+                        sortedItems.forEachIndexed { _, alternative ->
+                            delay(100) // shorter delay to reduce compounded delay effect
+                            visibleItems.value += alternative
+                        }
+                    }
+                }
+                for (alternative in visibleItems.value) {
+                    key(alternative) {
+                        AnimatedVisibility(
+                            visible = showAlternatives,
+                            enter = fadeIn(animationSpec = tween(700)) + slideInVertically(
+                                initialOffsetY = { -it / 2 }), // Adjust offset for smoother effect
+                            exit = fadeOut(animationSpec = tween(700)) + slideOutVertically(
+                                targetOffsetY = { -it / 2 }) // Adjust offset for smoother effect
+                        ) {
+                            SkuView(sku = alternative)
+                        }
                     }
                 }
             }
-
-            for (alternative in visibleItems.value) {
-                key(alternative) {
-                    AnimatedVisibility(
-                        visible = showAlternatives,
-                        enter = fadeIn(animationSpec = tween(700)) + slideInVertically(
-                            initialOffsetY = { -it / 2 }), // Adjust offset for smoother effect
-                        exit = fadeOut(animationSpec = tween(700)) + slideOutVertically(
-                            targetOffsetY = { -it / 2 }) // Adjust offset for smoother effect
-                    ) {
-                        SkuView(sku = alternative)
-                    }
-                }
-            }
-        }
+//        }
     }
 }
