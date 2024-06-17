@@ -48,10 +48,10 @@ fun SkuView(sku: ItemSku) {
 
 
     Row(verticalAlignment = Alignment.CenterVertically) {
-        AsyncImage(
-            model = sku.defaultimageurl,
-            contentDescription = "Item image url"
-        )
+//        AsyncImage(
+//            model = sku.defaultimageurl,
+//            contentDescription = "Item image url"
+//        )
         Column(modifier = Modifier.padding(all = 10.dp)) {
 
             Row(modifier = Modifier.padding(bottom = 5.dp)) {
@@ -132,7 +132,7 @@ fun SkuView(sku: ItemSku) {
                             color = colorResource(id = R.color.tesco_blue),
                             fontSize = 30.sp,
                             textAlign = TextAlign.Center,
-                            modifier = Modifier.offset(y = (-4).dp)
+                            modifier = Modifier.offset(y = (-5).dp)
 
                         )
                     }
