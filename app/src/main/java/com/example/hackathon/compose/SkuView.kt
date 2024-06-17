@@ -101,11 +101,7 @@ fun SkuView(sku: ItemSku) {
         }
 
     }
-        if (sku.promotions != null && sku.promotions!!.isNotEmpty()) {
-
-            ClubCard(promo = sku.promotions!!.get(0))
-
-        }
+        Promotions(sku)
 }
 }
 

@@ -59,6 +59,7 @@ class BarcodeAnalyser(private val context: Context,
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun getAlternatives(text: String) {
+        Log.i("BarcodeAnalyser", "GTIN: $text")
             GlobalScope.launch(Dispatchers.Main) {
                 val username = BuildConfig.USERNAME
                 val password = BuildConfig.PASSWORD
@@ -82,7 +83,7 @@ class BarcodeAnalyser(private val context: Context,
                         }
                     } else {
                         viewModel.hideLoader()
-                        viewModel.enableScan(true)
+//                        viewModel.enableScan(true)
                         viewModel.showError(true)
                         val statusCode = result.code()
                         val errorBody = result.errorBody()?.string()
@@ -90,7 +91,7 @@ class BarcodeAnalyser(private val context: Context,
                     }
                 } catch (e: HttpException) {
                     viewModel.hideLoader()
-                    viewModel.enableScan(true)
+//                    viewModel.enableScan(true)
                     viewModel.showError(true)
                     val statusCode = e.code()
                     val errorMessage = e.message()
@@ -98,7 +99,7 @@ class BarcodeAnalyser(private val context: Context,
                 } catch (e: Throwable) {
                     // Handle network exceptions or unexpected errors
                     viewModel.hideLoader()
-                    viewModel.enableScan(true)
+//                    viewModel.enableScan(true)
                     viewModel.showError(true)
                     Log.e("GET_FAILURE", "Error fetching data: $e.message")
                 }

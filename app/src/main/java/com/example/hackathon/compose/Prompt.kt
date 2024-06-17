@@ -5,7 +5,10 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -14,17 +17,20 @@ import androidx.compose.ui.unit.dp
 import com.example.hackathon.api.ApiResponse
 import com.example.hackathon.model.AlternativeItemSku
 import com.example.hackathon.model.ItemSku
+import com.example.hackathon.model.Promotion
 import com.example.hackathon.ui.theme.HackathonTheme
 import java.util.ArrayList
 
 @SuppressLint("CoroutineCreationDuringComposition")
 @Composable
 fun Prompt(sku: ApiResponse) {
-
+    val scrollState = rememberScrollState()
     Box(
         modifier = Modifier
             .background(Color.White)
             .padding(all = 10.dp)
+            .fillMaxHeight()
+            .verticalScroll(scrollState)
     ) {
         Column(modifier = Modifier.background(Color.White)) {
 
@@ -70,6 +76,18 @@ fun PromptPreview() {
         "100ml",
         "AvailableForSale",
         emptyList()
+    )
+    var promo = Promotion(
+        promotionid = "123",
+        offertext = "This is a wonderful offer - cheapest product available in tesco",
+        attributes = "REDUCED_SECTION",
+        promotiontype = "",
+        startdate = "",
+        enddate = "",
+        productid = "",
+        afterdiscount = "",
+        beforediscount = "",
+        unitsellinginfo = ""
     )
     val altItem = AlternativeItemSku(
         "251496258",

@@ -26,7 +26,10 @@ fun ErrorMessage(viewModel: AppViewModel?) {
                     .zIndex(1f),
                 action = {
                     TextButton(
-                        onClick = { viewModel.showError(false) },
+                        onClick = {
+                            viewModel.showError(false)
+                            viewModel.enableScan(true)
+                        }
 //                              colors = ButtonDefaults.textButtonColors(contentColor = Color.White)
                     ) {
 //                                Icon(
