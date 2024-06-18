@@ -34,7 +34,6 @@ import coil.compose.AsyncImage
 import com.example.hackathon.R
 import com.example.hackathon.model.ItemSku
 import com.example.hackathon.tescoFontFamily
-import kotlin.math.abs
 
 @Composable
 fun SkuView(sku: ItemSku) {
@@ -48,7 +47,19 @@ fun SkuView(sku: ItemSku) {
     }
 
     // Generate a consistent aisle number based on the title
-    val aisleNumber = abs(sku.title.hashCode() % 45) + 1
+    var aisle = ""
+    if(sku.title.contains("Cola"))
+    {
+        aisle = "Soft Drinks";
+    }
+    if(sku.title.contains("Apple"))
+    {
+        aisle = "Fruit & Veg"
+    }
+    if(sku.title.contains("Coffee"))
+    {
+        aisle = "Coffee & Tea"
+    }
 
     Column {
         Row(verticalAlignment = Alignment.CenterVertically) {
@@ -71,7 +82,7 @@ fun SkuView(sku: ItemSku) {
 
                 // Display aisle number in the middle
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
-                    val displayText = if (sku.status == "reduced") "Reduced Section" else "Aisle $aisleNumber"
+                    val displayText = if (sku.status == "reduced") "Reduced Section" else "Aisle: $aisle"
                     Text(
                         displayText,
                         color = Color.Gray,
