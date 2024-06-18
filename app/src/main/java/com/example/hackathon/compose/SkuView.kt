@@ -1,5 +1,6 @@
 package com.example.hackathon.compose
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -47,16 +48,17 @@ fun SkuView(sku: ItemSku) {
     }
 
     // Generate a consistent aisle number based on the title
+    Log.i("SkuView", sku.title)
     var aisle = ""
-    if(sku.title.contains("Cola"))
+    if (sku.title.contains("Cola"))
     {
         aisle = "Soft Drinks";
     }
-    if(sku.title.contains("Apple"))
+    if (sku.title.contains("Apple"))
     {
         aisle = "Fruit & Veg"
     }
-    if(sku.title.contains("Coffee"))
+    if (sku.title.contains("Coffee"))
     {
         aisle = "Coffee & Tea"
     }
@@ -80,8 +82,10 @@ fun SkuView(sku: ItemSku) {
                     )
                 }
 
+
                 // Display aisle number in the middle
                 Row(modifier = Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
+                    Spacer(modifier = Modifier.weight(1.0f))
                     val displayText = if (sku.status == "reduced") "Reduced Section" else "Aisle: $aisle"
                     Text(
                         displayText,
@@ -158,7 +162,7 @@ fun SkuView(sku: ItemSku) {
                                     color = colorResource(id = R.color.tesco_blue),
                                     fontSize = 30.sp,
                                     textAlign = TextAlign.Center,
-                                    modifier = Modifier.offset(y = (-5).dp)
+                                    modifier = Modifier.offset(y = (-8).dp)
                                 )
                             }
 
@@ -181,7 +185,8 @@ fun SkuView(sku: ItemSku) {
                             ) {
                                 Icon(
                                     imageVector = Icons.Default.Add,
-                                    contentDescription = "Add item to basket"
+                                    contentDescription = "Add item to basket",
+                                    tint = Color.White
                                 )
                             }
                         }
