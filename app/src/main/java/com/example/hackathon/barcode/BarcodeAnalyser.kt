@@ -38,6 +38,7 @@ class BarcodeAnalyser(
     private val framesToCapture = 5
     private val frameDelayMillis = 200L // Delay between frames in milliseconds
 
+    @OptIn(DelicateCoroutinesApi::class)
     @SuppressLint("UnsafeOptInUsageError")
     override fun analyze(imageProxy: ImageProxy) {
         if (!viewModel.isScanEnabled.value) {
