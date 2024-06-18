@@ -92,6 +92,8 @@ dependencies {
     implementation("androidx.activity:activity-compose:1.4.0")
     implementation("androidx.lifecycle:lifecycle-viewmodel-compose:2.4.0")
     implementation("io.coil-kt:coil-compose:2.0.0")
+    implementation ("com.google.accompanist:accompanist-systemuicontroller:0.28.0")
+    implementation(libs.firebase.crashlytics.buildtools)
 
 
     testImplementation(libs.junit)
