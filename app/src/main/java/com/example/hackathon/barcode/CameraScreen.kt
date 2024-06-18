@@ -47,7 +47,7 @@ fun CameraScreen(analyzerType: AnalyserType, viewModel: AppViewModel) {
             imageAnalysis.setAnalyzer(
                 ContextCompat.getMainExecutor(context),
                 if (analyzerType == AnalyserType.BARCODE) {
-                    BarcodeAnalyser(context, viewModel)
+                    BarcodeAnalyser(viewModel)
                 } else {
                     TextAnalyzer(context)
                 }
